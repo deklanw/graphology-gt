@@ -1,5 +1,5 @@
 import fs from "fs";
-import { parseGT } from "../src/gt";
+import parseGT from "../src/";
 import { Buffer } from "buffer/";
 
 type TestInfo = {
@@ -8,9 +8,6 @@ type TestInfo = {
   numEdges: number;
   directed: boolean;
 };
-
-// skipping multigraphs. not marked as such on nz.
-// 7th graders, college_freshmen, polblogs, florentine_families, etc
 
 const TEST_CASES: TestInfo[] = [
   {
@@ -55,7 +52,10 @@ test("Opens gt", async () => {
     const buffer = fs.readFileSync(path);
     const fileBuffer = Buffer.from(buffer);
     let t0 = performance.now();
-    let graph = parseGT(fileBuffer);
+
+    // https://github.com/feross/buffer/pull/274
+    // any cast shouldn't be necessary when this is fixed
+    let graph = parseGT(fileBuffer as any);
     let t1 = performance.now();
     console.log(`Total time to create graph ${t1 - t0}`);
 

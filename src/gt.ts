@@ -1,5 +1,4 @@
 import Graph from "graphology";
-import { Buffer } from "buffer/";
 
 const nullOrArrayOfNulls = (v: any) =>
   v === null || (Array.isArray(v) && v[0] === null);
@@ -62,8 +61,8 @@ class SmartBuffer {
 
   readBigUInt = () => {
     const v = this.bigEndian
-      ? (this.b as any).readBigUInt64BE(this.offset)
-      : (this.b as any).readBigUInt64LE(this.offset);
+      ? this.b.readBigUInt64BE(this.offset)
+      : this.b.readBigUInt64LE(this.offset);
     this.offset += 8;
 
     // not handling true bigints
@@ -73,8 +72,8 @@ class SmartBuffer {
 
   readBigInt = () => {
     const v = this.bigEndian
-      ? (this.b as any).readBigInt64BE(this.offset)
-      : (this.b as any).readBigInt64LE(this.offset);
+      ? this.b.readBigInt64BE(this.offset)
+      : this.b.readBigInt64LE(this.offset);
     this.offset += 8;
 
     // not handling true bigints
@@ -125,12 +124,9 @@ export function parseGT(fileBuffer: Buffer) {
 
   const numNodes = smartBuffer.readBigUInt();
 
-  let t0 = performance.now();
   for (let i = 0; i < numNodes; i++) {
     graph.addNode(i);
   }
-  let t1 = performance.now();
-  console.log(`Adding nodes took ${t1 - t0}`);
 
   const requiredBits = Math.log2(numNodes);
 
@@ -148,26 +144,17 @@ export function parseGT(fileBuffer: Buffer) {
 
   let currentEdgeIndex = 0;
 
-  t0 = performance.now();
-  let timeAdding = 0;
   for (let nodeIndex = 0; nodeIndex < numNodes; nodeIndex++) {
     const numNeighbors = smartBuffer.readBigUInt();
 
     for (let j = 0; j < numNeighbors; j++) {
       let neighbor = smartBuffer.readUInt(usedBytesForNodeIndex);
-      let s0 = performance.now();
       graph.addEdgeWithKey(currentEdgeIndex, nodeIndex, neighbor);
-      let s1 = performance.now();
-      timeAdding += s1 - s0;
       currentEdgeIndex++;
     }
   }
 
   const numEdges = currentEdgeIndex;
-
-  t1 = performance.now();
-  console.log(`Parsing binary and adding edges took total time ${t1 - t0}`);
-  console.log(`Just all addEdgeWithKey calls took ${timeAdding}`);
 
   const numPropMaps = smartBuffer.readBigUInt();
 
@@ -227,7 +214,6 @@ export function parseGT(fileBuffer: Buffer) {
     }
   };
 
-  t0 = performance.now();
   for (let i = 0; i < numPropMaps; i++) {
     const keyType = smartBuffer.readUInt8();
     const propertyName = smartBuffer.readGTString();
@@ -245,6 +231,8 @@ export function parseGT(fileBuffer: Buffer) {
       const firstElement = vProps[0];
 
       // if we can't handle this type then first element will be null or an array of nulls. skip that case
+      // storing arrays of nulls is obviously wasteful, but it makes for good consistency with the
+      // cases we can handle
       if (!nullOrArrayOfNulls(firstElement)) {
         vProps.forEach((value, i) => {
           graph.setNodeAttribute(i, propertyName, value);
@@ -265,9 +253,6 @@ export function parseGT(fileBuffer: Buffer) {
       throw Error("Unknown key type");
     }
   }
-
-  t1 = performance.now();
-  console.log(`Adding props took ${t1 - t0}`);
 
   return graph;
 }
