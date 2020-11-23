@@ -1,4 +1,8 @@
 import Graph from "graphology";
+import type { Buffer as BrowserBuffer } from "buffer/";
+
+// accounting for small differences between the "buffer" package (for the browser) and the actual Buffer types in Node
+type BBuffer = Buffer | BrowserBuffer;
 
 const nullOrArrayOfNulls = (v: any) =>
   v === null || (Array.isArray(v) && v[0] === null);
@@ -8,7 +12,7 @@ class SmartBuffer {
   offset = 0;
   bigEndian = false;
 
-  constructor(private b: Buffer) {}
+  constructor(private b: BBuffer) {}
 
   moveOffset = (byteLength: number) => {
     this.offset += byteLength;
@@ -101,7 +105,7 @@ class SmartBuffer {
   };
 }
 
-export function parseGT(fileBuffer: Buffer) {
+export function parseGT(fileBuffer: BBuffer) {
   // casting BigInts to Number in a few places.. if these are actually that large it's doomed. fine for now
 
   const smartBuffer = new SmartBuffer(fileBuffer);

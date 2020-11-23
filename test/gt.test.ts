@@ -53,9 +53,7 @@ test("Opens gt", async () => {
     const fileBuffer = Buffer.from(buffer);
     let t0 = performance.now();
 
-    // https://github.com/feross/buffer/pull/274
-    // any cast shouldn't be necessary when this is fixed
-    let graph = parseGT(fileBuffer as any);
+    let graph = parseGT(fileBuffer);
     let t1 = performance.now();
     console.log(`Total time to create graph ${t1 - t0}`);
 
