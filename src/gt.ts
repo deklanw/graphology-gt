@@ -1,4 +1,4 @@
-import Graph from "graphology";
+import Graph, { UsageGraphError } from "graphology";
 import type { Buffer as BrowserBuffer } from "buffer/";
 
 // accounting for small differences between the "buffer" package (for the browser) and the actual Buffer types in Node
@@ -122,7 +122,7 @@ export function parseGT(fileBuffer: BBuffer) {
 
   const graph = new Graph({
     allowSelfLoops: true,
-    multi: true,
+    multi: false,
     type: directed ? "directed" : "undirected",
   });
 
@@ -153,7 +153,18 @@ export function parseGT(fileBuffer: BBuffer) {
 
     for (let j = 0; j < numNeighbors; j++) {
       let neighbor = smartBuffer.readUInt(usedBytesForNodeIndex);
-      graph.addEdgeWithKey(currentEdgeIndex, nodeIndex, neighbor);
+      try {
+        graph.addEdgeWithKey(currentEdgeIndex, nodeIndex, neighbor);
+      } catch (e) {
+        if (e instanceof UsageGraphError) {
+          console.log("Found multi edge. Changing graph to multi.");
+          graph.upgradeToMulti();
+          // add the edge causing the throw
+          graph.addEdgeWithKey(currentEdgeIndex, nodeIndex, neighbor);
+        } else {
+          throw e;
+        }
+      }
       currentEdgeIndex++;
     }
   }

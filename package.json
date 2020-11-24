@@ -1,6 +1,6 @@
 {
   "name": "graphology-gt",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "license": "MIT",
