@@ -1,6 +1,6 @@
 {
   "name": "graphology-gt",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
@@ -9,6 +9,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.module.js",
   "unpkg": "./dist/index.umd.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "microbundle",
