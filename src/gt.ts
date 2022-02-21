@@ -1,5 +1,8 @@
 import Graph, { UsageGraphError } from "graphology";
 import type { Buffer as BrowserBuffer } from "buffer/";
+import { toMulti } from "graphology-operators"
+
+import type AbstractGraph from "graphology-types";
 
 // accounting for small differences between the "buffer" package (for the browser) and the actual Buffer types in Node
 type BBuffer = Buffer | BrowserBuffer;
@@ -12,7 +15,7 @@ class SmartBuffer {
   offset = 0;
   bigEndian = false;
 
-  constructor(private b: BBuffer) {}
+  constructor(private b: BBuffer) { }
 
   moveOffset = (byteLength: number) => {
     this.offset += byteLength;
@@ -105,7 +108,7 @@ class SmartBuffer {
   };
 }
 
-export function parseGT(fileBuffer: BBuffer) {
+export function parseGT(fileBuffer: BBuffer): AbstractGraph {
   // casting BigInts to Number in a few places.. if these are actually that large it's doomed. fine for now
 
   const smartBuffer = new SmartBuffer(fileBuffer);
@@ -120,7 +123,7 @@ export function parseGT(fileBuffer: BBuffer) {
 
   const directed = smartBuffer.readBool();
 
-  const graph = new Graph({
+  let graph = new Graph({
     allowSelfLoops: true,
     multi: false,
     type: directed ? "directed" : "undirected",
@@ -158,7 +161,7 @@ export function parseGT(fileBuffer: BBuffer) {
       } catch (e) {
         if (e instanceof UsageGraphError) {
           console.log("Found multi edge. Changing graph to multi.");
-          graph.upgradeToMulti();
+          graph = toMulti(graph);
           // add the edge causing the throw
           graph.addEdgeWithKey(currentEdgeIndex, nodeIndex, neighbor);
         } else {
