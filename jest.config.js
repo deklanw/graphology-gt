@@ -1,3 +1,3 @@
 module.exports = {
-  modulePathIgnorePatterns: ["<rootDir>/lib/"],
+  modulePathIgnorePatterns: ["<rootDir>/dist/"],
 };
