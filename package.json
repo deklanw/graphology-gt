@@ -1,6 +1,7 @@
 {
   "name": "graphology-gt",
-  "version": "1.0.4",
+  "type": "module",
+  "version": "1.0.5",
   "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
