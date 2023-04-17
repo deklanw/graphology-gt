@@ -5,8 +5,8 @@ dependencies:
     specifier: ^6.0.3
     version: 6.0.3
   graphology:
-    specifier: ^0.25.1
-    version: 0.25.1(graphology-types@0.24.7)
+    specifier: 0.26.0-alpha1
+    version: 0.26.0-alpha1(graphology-types@0.24.7)
   graphology-operators:
     specifier: ^1.6.0
     version: 1.6.0(graphology-types@0.24.7)
@@ -2823,8 +2823,8 @@ packages:
       graphology-types: 0.24.7
     dev: false
 
-  /graphology@0.25.1(graphology-types@0.24.7):
-    resolution: {integrity: sha512-yYA7BJCcXN2DrKNQQ9Qf22zBHm/yTbyBR71T1MYBbGtywNHsv0QZtk8zaR6zxNcp2hCCZayUkHp9DyMSZCpoxQ==}
+  /graphology@0.26.0-alpha1(graphology-types@0.24.7):
+    resolution: {integrity: sha512-XQ3b+P3Vvljq/mF+O15R5PlR8kVpRL8K8vhJWW9Enh2+iGNn5c3WZNpXP2OaAacfNV3a9gV3Ia6+Qz6do2JZ8w==}
     peerDependencies:
       graphology-types: '>=0.24.0'
     dependencies:

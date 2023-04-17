@@ -1,7 +1,7 @@
 {
   "name": "graphology-gt",
   "type": "module",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "graphology": "^0.25.1",
+    "graphology": "0.26.0-alpha1",
     "graphology-operators": "^1.6.0",
     "graphology-types": "^0.24.7"
   },
@@ -39,6 +39,6 @@
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "graphology": "^0.25.1"
+    "graphology": "0.26.0-alpha1"
   }
 }
